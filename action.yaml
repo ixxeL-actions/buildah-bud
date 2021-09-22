@@ -10,7 +10,7 @@ inputs:
     required: false
     default: '""'
   format:
-    description: 'format of the built image's manifest and metadata'
+    description: 'format of the built images manifest and metadata'
     required: false
     default: 'oci'
   build-arg:
