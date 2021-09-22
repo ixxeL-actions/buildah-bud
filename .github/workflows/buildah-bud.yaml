@@ -1,0 +1,27 @@
+name: buildah-bud-CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    container: 
+      image: ixxel/multi-tools-alpine:latest
+    steps:
+    - name: Git clone repo
+      uses: actions/checkout@v2
+    - name: Buildah bud docker image
+      uses: ixxeL-actions/buildah-bud@main
+      with:
+        tag: 'test:v1.0'
+        file: '""'
+        format: 'oci'
+        build-arg: ''
+        working-dir: '.'
