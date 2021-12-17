@@ -1,18 +1,19 @@
+---
 name: buildah-bud-CI
 on:
   push:
     branches:
-      - main
+    - main
   pull_request:
     branches:
-      - main
+    - main
 jobs:
   test:
     strategy:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    container: 
+    container:
       image: ixxel/multi-tools-alpine:latest
       options: --privileged
     steps:
@@ -21,8 +22,8 @@ jobs:
     - name: Buildah bud docker image
       uses: ixxeL-actions/buildah-bud@main
       with:
-        tag: 'test:v1.0'
+        tag: test:v1.0
         file: '""'
-        format: 'oci'
+        format: oci
         build-arg: ''
-        working-dir: '.'
+        working-dir: .

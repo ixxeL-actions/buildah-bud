@@ -1,57 +1,58 @@
-name: 'Buildah bud'
-description: 'Build docker images with Buildah'
-author: 'ixxeL'
+---
+name: Buildah bud
+description: Build docker images with Buildah
+author: ixxeL
 inputs:
   tag:
-    description: 'tagged name to apply to the built image'
+    description: tagged name to apply to the built image
     required: true
   file:
-    description: 'pathname or URL of a Dockerfile'
+    description: pathname or URL of a Dockerfile
     required: false
     default: '""'
   format:
-    description: 'format of the built images manifest and metadata'
+    description: format of the built images manifest and metadata
     required: false
-    default: 'oci'
+    default: oci
   build-arg:
-    description: 'argument=value to supply to the builder'
+    description: argument=value to supply to the builder
     required: false
     default: ''
   working-dir:
-    description: 'directory in which to find the Dockerfile'
+    description: directory in which to find the Dockerfile
     required: false
-    default: '.'
+    default: .
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - id: grype-scan
-      run: |
-        echo -e "${BLUE}[ STEP - BUILDING IMAGE ] > Building docker image ${{ inputs.tag }} with buildah.${BLANK}"
-        echo -e "${CYAN}[ INFO ] > Buildah version.${BLANK}"
-        buildah --version
-        echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.tag }}.${BLANK}"
+  - id: grype-scan
+    run: |
+      echo -e "${BLUE}[ STEP - BUILDING IMAGE ] > Building docker image ${{ inputs.tag }} with buildah.${BLANK}"
+      echo -e "${CYAN}[ INFO ] > Buildah version.${BLANK}"
+      buildah --version
+      echo -e "${YELLOW}[ EXECUTING ] > Executing build of ${{ inputs.tag }}.${BLANK}"
 
-        if [ "${{ inputs.build-arg }}" ];then
-          BUILD_ARGS=""
-          str=${{ inputs.build-arg }}
-          final=${str//,/ --build-arg }
-          BUILD_ARGS="$BUILD_ARGS --build-arg $final"
-        fi
+      if [ "${{ inputs.build-arg }}" ];then
+        BUILD_ARGS=""
+        str=${{ inputs.build-arg }}
+        final=${str//,/ --build-arg }
+        BUILD_ARGS="$BUILD_ARGS --build-arg $final"
+      fi
 
-        buildah bud --format ${{ inputs.format }} \
-                    --file ${{ inputs.file }} \
-                    --tag ${{ inputs.tag }} \
-                    ${BUILD_ARGS} \
-                    ${{ inputs.working-dir }}
-        echo -e "${CYAN}[ INFO ] > Displaying buildah built images.${BLANK}"
-        buildah images
-      shell: bash
-      env:
-        RED: \033[1;31m
-        GREEN: \033[1;32m
-        YELLOW: \033[1;33m
-        BLUE: \033[1;34m
-        PURPLE: \033[1;35m
-        CYAN: \033[1;36m
-        BLANK: \033[0m
+      buildah bud --format ${{ inputs.format }} \
+                  --file ${{ inputs.file }} \
+                  --tag ${{ inputs.tag }} \
+                  ${BUILD_ARGS} \
+                  ${{ inputs.working-dir }}
+      echo -e "${CYAN}[ INFO ] > Displaying buildah built images.${BLANK}"
+      buildah images
+    shell: bash
+    env:
+      RED: \033[1;31m
+      GREEN: \033[1;32m
+      YELLOW: \033[1;33m
+      BLUE: \033[1;34m
+      PURPLE: \033[1;35m
+      CYAN: \033[1;36m
+      BLANK: \033[0m
